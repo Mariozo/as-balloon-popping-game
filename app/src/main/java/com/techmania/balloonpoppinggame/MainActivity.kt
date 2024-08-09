@@ -2,13 +2,14 @@ package com.techmania.balloonpoppinggame
 
 import android.content.Intent
 import android.media.MediaPlayer
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.widget.ImageView
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
 import com.techmania.balloonpoppinggame.databinding.ActivityMainBinding
 import kotlin.random.Random
 
@@ -16,13 +17,14 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var mainBinding : ActivityMainBinding
     var score = 0
-    lateinit var handler: Handler
-    lateinit var runnable: Runnable
-    lateinit var ballonsArray : Array<ImageView>
-    lateinit var mediaPlayer: MediaPlayer
-    var status = false
+    private lateinit var handler: Handler
+    private lateinit var runnable: Runnable
+    private lateinit var   ballonsArray: Array<ImageView>
+    private lateinit var mediaPlayer: MediaPlayer
+    private var status = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mainBinding.root)
@@ -76,7 +78,9 @@ class MainActivity : AppCompatActivity() {
 
                 object : CountDownTimer(30000,1000){
                     override fun onTick(millisUntilFinished: Long) {
-                        mainBinding.textViewRemainingTime.text = "Remaining Time: ${millisUntilFinished/1000}"
+                        val remainingSeconds = millisUntilFinished / 1000
+                        mainBinding.textViewRemainingTime.text = getString(R.string.remaining_time, remainingSeconds)
+                        /* mainBinding.textViewRemainingTime.text = "@string/Remaining Time: ${millisUntilFinished/1000}"*/
                     }
 
                     override fun onFinish() {
@@ -99,8 +103,8 @@ class MainActivity : AppCompatActivity() {
 
     fun increaseScoreByOne(view : View){
         score++
-        mainBinding.textViewScore.text = "Score: $score"
-
+        /*   mainBinding.textViewScore.text = "Score: $score"*/
+        mainBinding.textViewScore.text = getString(R.string.score_text,score)
         if (mediaPlayer.isPlaying){
             mediaPlayer.seekTo(0)
             mediaPlayer.start()

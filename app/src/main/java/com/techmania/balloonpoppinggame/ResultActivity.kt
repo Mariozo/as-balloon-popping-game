@@ -9,8 +9,8 @@ import com.techmania.balloonpoppinggame.databinding.ActivityResultBinding
 
 class ResultActivity : AppCompatActivity() {
 
-    lateinit var resultBinding : ActivityResultBinding
-    lateinit var sharedPreferences: SharedPreferences
+    private lateinit var resultBinding : ActivityResultBinding
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,39 +18,34 @@ class ResultActivity : AppCompatActivity() {
         setContentView(resultBinding.root)
 
         val myScore = intent.getIntExtra("score",0)
-        resultBinding.textViewMyScore.text = "Your Score: $myScore"
+        resultBinding.textViewMyScore.text = getString(R.string.score_text,myScore)
 
         sharedPreferences = this.getSharedPreferences("Score",Context.MODE_PRIVATE)
         val highestScore = sharedPreferences.getInt("highestScore",0)
 
         if (myScore >= highestScore){
             sharedPreferences.edit().putInt("highestScore",myScore).apply()
-            resultBinding.textViewHighestScore.text = "Highest Score: $myScore"
-            resultBinding.textViewInfo.text = "Congratulations. The new high score. Do you want to get better scores?"
+            resultBinding.textViewHighestScore.text = getString(R.string.score_highest,myScore)
+            resultBinding.textViewInfo.text = getString(R.string.new_high_score_message)
         }else{
-            resultBinding.textViewHighestScore.text = "Highest Score: $highestScore"
 
             if ((highestScore - myScore) > 10){
-                resultBinding.textViewInfo.text = "You must get a little faster!"
+                resultBinding.textViewInfo.text = getString(R.string.faster_message)
             }else if ((highestScore - myScore) in 4..10){
-                resultBinding.textViewInfo.text = "Good. How about getting a little faster?"
+                resultBinding.textViewInfo.text = getString(R.string.good_faster_message)
             }else{
-                resultBinding.textViewInfo.text = "Excellent. If you get a little faster, you can reach the high score."
+                resultBinding.textViewInfo.text = getString(R.string.excellent_faster_message)
             }
-
         }
 
         resultBinding.buttonPlayAgain.setOnClickListener {
 
             startActivity(Intent(this,MainActivity::class.java))
             finish()
-
         }
         resultBinding.buttonQuit.setOnClickListener {
 
             finishAffinity()
-
         }
-
     }
 }
